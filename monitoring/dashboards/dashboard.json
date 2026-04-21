@@ -1,0 +1,26 @@
+{
+  "id": null,
+  "title": "Flask Monitoring Dashboard v2",
+  "tags": ["flask", "prometheus"],
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Total Requests",
+      "targets": [
+        { "expr": "app_requests_total", "legendFormat": "Requests" }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Service Availability",
+      "targets": [
+        { "expr": "up", "legendFormat": "Up" }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+    }
+  ]
+}
