@@ -16,14 +16,14 @@ pipeline {
         
         stage('Clean old containers') {
             steps {
-                sh 'cd /root/devops-project && docker compose down --remove-orphans || true'
+                sh 'docker compose down --remove-orphans || true'
                 sh 'docker rm -f flask-app prometheus grafana 2>/dev/null || true'
             }
         }
         
         stage('Compose Up') {
             steps {
-                sh 'cd /root/devops-project && docker compose up -d'
+                sh 'docker compose up -d'
             }
         }
         
