@@ -29,10 +29,24 @@ pipeline {
         
         stage('Verify') {
             steps {
-                sh 'sleep 5'
-                sh 'curl -f http://localhost:5000/ || exit 1'
-                sh 'curl -f http://localhost:9090/ || exit 1'
-                sh 'curl -f http://localhost:3000/ || exit 1'
+                sh '''
+                    echo "Attente du démarrage des services..."
+                    sleep 10
+                    
+                    echo "Vérification de l'application Flask..."
+                    curl -f http://localhost:5000/ || exit 1
+                    
+                    echo "Vérification de Prometheus..."
+                    curl -f http://localhost:9090/ || exit 1
+                    
+                    echo "Attente supplémentaire pour Grafana..."
+                    sleep 10
+                    
+                    echo "Vérification de Grafana..."
+                    curl -f http://localhost:3000/ || exit 1
+                    
+                    echo "Tous les services sont opérationnels !"
+                '''
             }
         }
     }
