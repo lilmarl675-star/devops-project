@@ -1,40 +1,267 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>API Flask DevOps</title>
+    <title>Bienvenue sur votre plateforme INPTIC Marlonne</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6EC1E4, #B39DDB);
-            color: #fff;
-            text-align: center;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        .container {
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0B1120 0%, #19233C 50%, #2A3A5F 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 20px;
         }
+        
+        .container {
+            background: rgba(15, 25, 45, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            padding: 50px 45px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+        
         h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #60A5FA, #C084FC, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            font-weight: 800;
+            margin-bottom: 12px;
         }
-        p {
-            font-size: 1.2em;
-            background: rgba(0,0,0,0.3);
-            padding: 15px 25px;
-            border-radius: 10px;
+        
+        .welcome-text {
+            color: #94A3B8;
+            font-size: 1em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        
+        /* Deux cartes côte à côte */
+        .stats-grid {
+            display: flex;
+            flex-direction: row;
+            gap: 25px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 28px;
+            padding: 25px 20px;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+        
+        .stat-icon {
+            font-size: 2.2em;
+            margin-bottom: 12px;
+        }
+        
+        .stat-label {
+            color: #94A3B8;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .counter-number {
+            font-size: 3.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60A5FA, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .status-icon {
+            font-size: 2.5em;
+            display: block;
+            margin: 5px 0;
+        }
+        
+        .stat-unit {
+            color: #64748B;
+            font-size: 0.7em;
+            margin-top: 8px;
+        }
+        
+        .badge {
+            background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(192,132,252,0.2));
+            border-radius: 100px;
+            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(96,165,250,0.3);
+        }
+        
+        .badge-text {
+            color: #A78BFA;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 1.2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            border: none;
+            padding: 14px 28px;
+            font-size: 0.95em;
+            font-weight: 600;
+            border-radius: 100px;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0 15px;
+            color: white;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px -4px rgba(59,130,246,0.4);
+        }
+        
+        .metrics-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            color: #60A5FA;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 18px;
+            border-radius: 100px;
+            background: rgba(96,165,250,0.1);
+        }
+        
+        .metrics-link:hover {
+            background: rgba(96,165,250,0.2);
+            gap: 12px;
+        }
+        
+        .footer {
+            margin-top: 35px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: #475569;
+            font-size: 0.7em;
+        }
+        
+        .footer strong {
+            color: #60A5FA;
+        }
+        
+        @media (max-width: 600px) {
+            .container { padding: 30px 25px; }
+            h1 { font-size: 1.6em; }
+            .stats-grid { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur l'API Flask DevOps !</h1>
-        <p>Votre environnement est prêt 🚀</p>
+        <h1>✨ Bienvenue sur<br>votre plateforme INPTIC Marlonne</h1>
+        <div class="welcome-text">Solution de gestion intelligente des étudiants</div>
+        
+        <div class="badge">
+            <span class="live-dot"></span>
+            <span class="badge-text">📡 Données en temps réel</span>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-label">REQUÊTES TRAITÉES</div>
+                <div class="counter-number" id="requestCount">0</div>
+                <div class="stat-unit">depuis le démarrage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-label">STATUT API</div>
+                <div class="status-icon">🟢</div>
+                <div class="stat-unit">Connectée</div>
+            </div>
+        </div>
+        
+        <button onclick="window.location.reload()">
+            🔄 Actualiser les données
+        </button>
+        
+        <div>
+            <a href="/metrics" class="metrics-link" target="_blank">
+                📈 Explorer les métriques Prometheus →
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>🔍 Supervisée par <strong>Prometheus</strong> + <strong>Grafana</strong></p>
+            <p>⚡ CI/CD Pipeline | Conteneurisation Docker | CentOS Stream</p>
+        </div>
     </div>
+    
+    <script>
+        async function updateCounter() {
+            try {
+                const response = await fetch('/metrics');
+                const text = await response.text();
+                const match = text.match(/app_requests_total ([0-9.]+)/);
+                if (match) {
+                    const count = Math.floor(parseFloat(match[1]));
+                    const el = document.getElementById('requestCount');
+                    el.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        el.innerText = count;
+                        el.style.transform = 'scale(1)';
+                    }, 150);
+                }
+            } catch(e) {}
+        }
+        setInterval(updateCounter, 2000);
+        updateCounter();
+    </script>
 </body>
 </html>
