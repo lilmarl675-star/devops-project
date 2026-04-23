@@ -27,4 +27,6 @@ services:
 
 volumes:
   prometheus-data:
+    name: devops-project_prometheus-data
   grafana-data:
+    name: devops-project_grafana-data
