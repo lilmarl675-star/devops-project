@@ -1,267 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Bienvenue sur votre plateforme INPTIC Marlonne</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INPTIC - Gestion des Étudiants</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0B1120 0%, #19233C 50%, #2A3A5F 100%);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
+            background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: rgba(15, 25, 45, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 48px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            padding: 50px 45px;
-            max-width: 700px;
-            width: 100%;
+            padding: 40px 20px;
             text-align: center;
         }
-        
-        h1 {
-            background: linear-gradient(135deg, #60A5FA, #C084FC, #F472B6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2.2em;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-        
-        .welcome-text {
-            color: #94A3B8;
-            font-size: 1em;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-        }
-        
-        /* Deux cartes côte à côte */
-        .stats-grid {
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-            justify-content: center;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 28px;
-            padding: 25px 20px;
-            flex: 1;
-            min-width: 200px;
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-3px);
-        }
-        
-        .stat-icon {
-            font-size: 2.2em;
-            margin-bottom: 12px;
-        }
-        
-        .stat-label {
-            color: #94A3B8;
-            font-size: 0.7em;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .counter-number {
-            font-size: 3.2em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60A5FA, #C084FC);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-        
-        .status-icon {
-            font-size: 2.5em;
-            display: block;
-            margin: 5px 0;
-        }
-        
-        .stat-unit {
-            color: #64748B;
-            font-size: 0.7em;
-            margin-top: 8px;
-        }
-        
-        .badge {
-            background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(192,132,252,0.2));
-            border-radius: 100px;
-            padding: 10px 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-            border: 1px solid rgba(96,165,250,0.3);
-        }
-        
-        .badge-text {
-            color: #A78BFA;
-            font-size: 0.85em;
-            font-weight: 500;
-        }
-        
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #10B981;
-            animation: pulse 1.2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-        
-        button {
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-            border: none;
-            padding: 14px 28px;
-            font-size: 0.95em;
-            font-weight: 600;
-            border-radius: 100px;
-            cursor: pointer;
-            width: 100%;
-            margin: 20px 0 15px;
-            color: white;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px -4px rgba(59,130,246,0.4);
-        }
-        
-        .metrics-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            color: #60A5FA;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 18px;
-            border-radius: 100px;
-            background: rgba(96,165,250,0.1);
-        }
-        
-        .metrics-link:hover {
-            background: rgba(96,165,250,0.2);
-            gap: 12px;
-        }
-        
-        .footer {
-            margin-top: 35px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            color: #475569;
-            font-size: 0.7em;
-        }
-        
-        .footer strong {
-            color: #60A5FA;
-        }
-        
-        @media (max-width: 600px) {
-            .container { padding: 30px 25px; }
-            h1 { font-size: 1.6em; }
-            .stats-grid { flex-direction: column; }
-        }
+        .content { max-width: 700px; width: 100%; animation: fadeInUp 0.6s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .logo-icon { font-size: 80px; margin-bottom: 15px; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2)); }
+        h1 { font-size: 4em; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .subtitle { font-size: 0.8em; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .divider { width: 80px; height: 3px; background: linear-gradient(90deg, #3b82f6, #a855f7); border-radius: 10px; margin: 20px auto; }
+        .badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px 24px; border-radius: 100px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .badge-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .badge-text { color: #cbd5e1; font-size: 0.85em; }
+        .welcome-message { font-size: 1.3em; font-weight: 500; color: #e2e8f0; line-height: 1.4; margin-bottom: 35px; }
+        .welcome-message span { color: #a855f7; font-weight: 700; }
+        .btn-login { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #3b82f6, #a855f7); color: white; text-decoration: none; padding: 14px 42px; font-size: 1em; font-weight: 600; border-radius: 60px; transition: all 0.3s; }
+        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -8px rgba(59,130,246,0.5); }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); color: #64748b; font-size: 0.7em; }
+        .footer strong { color: #94a3b8; }
+        @media (max-width: 600px) { h1 { font-size: 2.5em; } .logo-icon { font-size: 55px; } .welcome-message { font-size: 1em; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✨ Bienvenue sur<br>votre plateforme INPTIC Marlonne</h1>
-        <div class="welcome-text">Solution de gestion intelligente des étudiants</div>
-        
-        <div class="badge">
-            <span class="live-dot"></span>
-            <span class="badge-text">📡 Données en temps réel</span>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📊</div>
-                <div class="stat-label">REQUÊTES TRAITÉES</div>
-                <div class="counter-number" id="requestCount">0</div>
-                <div class="stat-unit">depuis le démarrage</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">⚡</div>
-                <div class="stat-label">STATUT API</div>
-                <div class="status-icon">🟢</div>
-                <div class="stat-unit">Connectée</div>
-            </div>
-        </div>
-        
-        <button onclick="window.location.reload()">
-            🔄 Actualiser les données
-        </button>
-        
-        <div>
-            <a href="/metrics" class="metrics-link" target="_blank">
-                📈 Explorer les métriques Prometheus →
-            </a>
-        </div>
-        
-        <div class="footer">
-            <p>🔍 Supervisée par <strong>Prometheus</strong> + <strong>Grafana</strong></p>
-            <p>⚡ CI/CD Pipeline | Conteneurisation Docker | CentOS Stream</p>
-        </div>
+    <div class="content">
+        <div class="logo-icon">🎓</div>
+        <h1>INPTIC</h1>
+        <div class="subtitle">Institut National de la Poste, des Technologies<br>et de la Communication</div>
+        <div class="divider"></div>
+        <div class="badge"><span class="badge-dot"></span><span class="badge-text">Plateforme certifiée</span></div>
+        <div class="welcome-message">Bienvenue dans <span>votre plateforme de gestion des étudiants</span>.</div>
+        <a href="/login" class="btn-login">🔐 Connexion administration →</a>
+        <div class="footer"><p>© 2024 <strong>INPTIC</strong> - Institut National de la Poste, des Technologies et de la Communication</p></div>
     </div>
-    
-    <script>
-        async function updateCounter() {
-            try {
-                const response = await fetch('/metrics');
-                const text = await response.text();
-                const match = text.match(/app_requests_total ([0-9.]+)/);
-                if (match) {
-                    const count = Math.floor(parseFloat(match[1]));
-                    const el = document.getElementById('requestCount');
-                    el.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        el.innerText = count;
-                        el.style.transform = 'scale(1)';
-                    }, 150);
-                }
-            } catch(e) {}
-        }
-        setInterval(updateCounter, 2000);
-        updateCounter();
-    </script>
 </body>
 </html>

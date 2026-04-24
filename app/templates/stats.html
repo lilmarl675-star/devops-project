@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques - INPTIC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo h2 { background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav { display: flex; gap: 15px; }
+        .nav a { padding: 10px 25px; border-radius: 40px; text-decoration: none; color: #94a3b8; font-weight: 500; transition: all 0.3s; }
+        .nav a.active, .nav a:hover { background: linear-gradient(135deg, #3b82f6, #a855f7); color: white; }
+        .btn-logout { background: rgba(239,68,68,0.2); color: #f87171 !important; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 25px; margin-bottom: 30px; }
+        .stat-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 24px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-card .value { font-size: 38px; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-card h3 { color: #94a3b8; font-size: 13px; margin-top: 8px; }
+        .chart-card, .table-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 24px; padding: 30px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .chart-card h3, .table-card h3 { color: #e2e8f0; margin-bottom: 20px; font-size: 20px; }
+        .bar-item { margin-bottom: 25px; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; }
+        .bar-bg { background: rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; height: 40px; }
+        .bar-fill { background: linear-gradient(90deg, #3b82f6, #a855f7); height: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; color: white; font-weight: bold; transition: width 0.6s ease; width: 0%; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #94a3b8; font-size: 12px; text-transform: uppercase; }
+        td { color: #cbd5e1; font-size: 14px; }
+        .date-badge { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 12px; font-size: 11px; white-space: nowrap; }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><h2>🏫 INPTIC - Statistiques</h2></div>
+            <div class="nav">
+                <a href="/dashboard">📊 Dashboard</a>
+                <a href="/stats" class="active">📈 Statistiques</a>
+                <a href="/logout" class="btn-logout">🔓 Déconnexion</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="value" id="totalCount">0</div><h3>📊 TOTAL ÉTUDIANTS</h3></div>
+            <div class="stat-card"><div class="value" id="addedCount">0</div><h3>➕ AJOUTÉS</h3></div>
+            <div class="stat-card"><div class="value" id="deletedCount">0</div><h3>🗑️ SUPPRIMÉS</h3></div>
+            <div class="stat-card"><div class="value" id="requestCount">0</div><h3>📡 REQUÊTES API</h3></div>
+        </div>
+
+        <div class="chart-card">
+            <h3>📊 Répartition par filière</h3>
+            <div class="bar-item"><div class="bar-label"><span>🎓 MTIC</span><span id="mticCount">0</span></div><div class="bar-bg"><div class="bar-fill" id="mticBar"></div></div></div>
+            <div class="bar-item"><div class="bar-label"><span>💻 GI</span><span id="giCount">0</span></div><div class="bar-bg"><div class="bar-fill" id="giBar"></div></div></div>
+            <div class="bar-item"><div class="bar-label"><span>🌐 RT</span><span id="rtCount">0</span></div><div class="bar-bg"><div class="bar-fill" id="rtBar"></div></div></div>
+        </div>
+
+        <div class="table-card">
+            <h3>📋 Liste des étudiants</h3>
+            <div style="overflow-x:auto;"><table><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Filière</th><th>Niveau</th><th>Ajouté le</th></tr></thead><tbody id="studentsTable"><tr><td colspan="7">Chargement...</td></tr></tbody></table></div>
+        </div>
+    </div>
+    <script>
+        function formatDate(d){ if(!d) return ''; let date=new Date(d); return date.toLocaleDateString('fr-FR')+' '+date.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+        async function loadStats(){
+            try{
+                let res=await fetch('/api/etudiants'); let data=await res.json(); let e=data.etudiants||[];
+                document.getElementById('totalCount').innerText=e.length;
+                let m=0,g=0,r=0;
+                e.forEach(s=>{ if(s.filiere_nom&&s.filiere_nom.includes('MTIC')) m++; else if(s.filiere_nom&&s.filiere_nom.includes('GI')) g++; else if(s.filiere_nom&&s.filiere_nom.includes('RT')) r++; });
+                let max=Math.max(m,g,r,1);
+                document.getElementById('mticCount').innerText=m; document.getElementById('mticBar').style.width=(m/max*100)+'%'; document.getElementById('mticBar').innerText=m||'';
+                document.getElementById('giCount').innerText=g; document.getElementById('giBar').style.width=(g/max*100)+'%'; document.getElementById('giBar').innerText=g||'';
+                document.getElementById('rtCount').innerText=r; document.getElementById('rtBar').style.width=(r/max*100)+'%'; document.getElementById('rtBar').innerText=r||'';
+                let tbody=document.getElementById('studentsTable');
+                if(!e.length){ tbody.innerHTML='<tr><td colspan="7">Aucun étudiant</td></tr>'; }
+                else{ tbody.innerHTML=e.map(s=>`<tr><td>${s.id}</td><td>${escapeHtml(s.nom)}</td><td>${escapeHtml(s.prenom)}</td><td>${escapeHtml(s.email)}</td><td>${escapeHtml(s.filiere_nom||'')}</td><td>${s.niveau}</td><td><span class="date-badge">${formatDate(s.created_at)}</span></td></tr>`).join(''); }
+            }catch(e){ console.error(e); }
+        }
+        async function updateCounters(){
+            try{
+                let res=await fetch('/metrics'); let t=await res.text();
+                let m=t.match(/app_requests_total ([0-9.]+)/); if(m) document.getElementById('requestCount').innerText=Math.floor(parseFloat(m[1]));
+                let a=t.match(/crud_operations_total\{operation="create"\} ([0-9.]+)/); if(a) document.getElementById('addedCount').innerText=Math.floor(parseFloat(a[1]));
+                let d=t.match(/crud_operations_total\{operation="delete"\} ([0-9.]+)/); if(d) document.getElementById('deletedCount').innerText=Math.floor(parseFloat(d[1]));
+            }catch(e){ console.error(e); }
+        }
+        function escapeHtml(s){ return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+        loadStats(); setInterval(()=>{ loadStats(); updateCounters(); },3000); updateCounters();
+    </script>
+</body>
+</html>

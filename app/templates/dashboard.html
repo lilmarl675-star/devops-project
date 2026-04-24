@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - INPTIC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo h2 { background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav { display: flex; gap: 15px; }
+        .nav a { padding: 10px 25px; border-radius: 40px; text-decoration: none; color: #94a3b8; font-weight: 500; transition: all 0.3s; }
+        .nav a.active, .nav a:hover { background: linear-gradient(135deg, #3b82f6, #a855f7); color: white; }
+        .btn-logout { background: rgba(239,68,68,0.2); color: #f87171 !important; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 25px; margin-bottom: 30px; }
+        .stat-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 24px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-card .value { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-card h3 { color: #94a3b8; font-size: 14px; margin-top: 8px; }
+        .form-card, .table-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 24px; padding: 30px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .form-card h3, .table-card h3 { color: #e2e8f0; margin-bottom: 20px; font-size: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; }
+        input, select { width: 100%; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; background: rgba(0,0,0,0.3); color: #e2e8f0; font-size: 14px; }
+        input:focus, select:focus { border-color: #a855f7; outline: none; }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #a855f7); color: white; border: none; padding: 14px 28px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #94a3b8; font-size: 12px; text-transform: uppercase; }
+        td { color: #cbd5e1; font-size: 14px; }
+        .btn-edit, .btn-delete { border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; margin: 0 3px; font-weight: 500; transition: all 0.2s; }
+        .btn-edit { background: #f59e0b; color: white; }
+        .btn-delete { background: #ef4444; color: white; }
+        .btn-edit:hover, .btn-delete:hover { transform: scale(1.02); }
+        .date-badge { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 12px; font-size: 11px; white-space: nowrap; }
+        .error-message { color: #f87171; font-size: 11px; display: none; margin-top: 5px; }
+        .toast-message { position: fixed; bottom: 30px; right: 30px; background: #10b981; color: white; padding: 12px 20px; border-radius: 16px; display: none; z-index: 1000; font-weight: 500; animation: slideIn 0.3s ease; }
+        .toast-message.error { background: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><h2>🏫 INPTIC - Gestion des étudiants</h2></div>
+            <div class="nav">
+                <a href="/dashboard" class="active">📊 Dashboard</a>
+                <a href="/stats">📈 Statistiques</a>
+                <a href="/logout" class="btn-logout">🔓 Déconnexion</a>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="value" id="totalCount">0</div><h3>📊 TOTAL ÉTUDIANTS</h3></div>
+            <div class="stat-card"><div class="value" id="requestCount">0</div><h3>📡 REQUÊTES API</h3></div>
+            <div class="stat-card"><div class="value">🟢</div><h3>STATUT CONNECTÉ</h3></div>
+        </div>
+        <div class="form-card">
+            <h3 id="formTitle">➕ Ajouter un étudiant</h3>
+            <div class="form-grid">
+                <div><input type="text" id="nom" placeholder="Nom"><div class="error-message" id="nomError">Nom requis</div></div>
+                <div><input type="text" id="prenom" placeholder="Prénom"><div class="error-message" id="prenomError">Prénom requis</div></div>
+                <div><input type="email" id="email" placeholder="Email (@gmail.com)"><div class="error-message" id="emailError">Email invalide (doit être @gmail.com)</div></div>
+                <select id="filiere_id"><option value="1">MTIC</option><option value="2">GI</option><option value="3">RT</option></select>
+                <select id="niveau"><option>Licence 1</option><option>Licence 2</option><option>Licence 3</option></select>
+                <button class="btn-primary" onclick="saveStudent()">💾 Enregistrer</button>
+            </div>
+        </div>
+        <div class="table-card">
+            <h3>📋 Liste des étudiants</h3>
+            <div style="overflow-x:auto;"><table><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Filière</th><th>Niveau</th><th>Ajouté le</th><th>Actions</th></tr></thead><tbody id="studentsTable"><tr><td colspan="8">Chargement...</td></tr></tbody></table></div>
+        </div>
+    </div>
+    <div id="toastMessage" class="toast-message"></div>
+    <script>
+        let editId=null;
+        function showToast(m,e=false){let t=document.getElementById('toastMessage'); t.textContent=m; t.className='toast-message'+(e?' error':''); t.style.display='block'; setTimeout(()=>{t.style.display='none';},3000);}
+        function formatDate(d){ if(!d) return ''; let date=new Date(d); return date.toLocaleDateString('fr-FR')+' '+date.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+        async function loadStudents(){
+            try{
+                let res=await fetch('/api/etudiants');
+                let data=await res.json();
+                let tbody=document.getElementById('studentsTable');
+                if(!data.etudiants||!data.etudiants.length){ tbody.innerHTML='<tr><td colspan="8">Aucun étudiant</td></tr>'; document.getElementById('totalCount').innerText='0'; return; }
+                tbody.innerHTML=data.etudiants.map(e=>`<tr><td>${e.id}</td><td>${escapeHtml(e.nom)}</td><td>${escapeHtml(e.prenom)}</td><td>${escapeHtml(e.email)}</td><td>${escapeHtml(e.filiere_nom||'')}</td><td>${e.niveau}</td><td><span class="date-badge">${formatDate(e.created_at)}</span></td><td><button class="btn-edit" onclick="editStudent(${e.id})">✏️</button><button class="btn-delete" onclick="deleteStudent(${e.id})">🗑️</button></td></tr>`).join('');
+                document.getElementById('totalCount').innerText=data.total||0;
+            }catch(e){console.error(e);}
+        }
+        function validateForm(){
+            let v=true;
+            if(!document.getElementById('nom').value.trim()){ v=false; }
+            if(!document.getElementById('prenom').value.trim()){ v=false; }
+            let e=document.getElementById('email').value.trim();
+            if(!e||!e.endsWith('@gmail.com')){ v=false; }
+            return v;
+        }
+        function formatPrenom(p){ return p?p.charAt(0).toUpperCase()+p.slice(1).toLowerCase():''; }
+        async function saveStudent(){
+            if(!validateForm()){ showToast('❌ Formulaire invalide',true); return; }
+            let data={ nom:document.getElementById('nom').value.trim().toUpperCase(), prenom:formatPrenom(document.getElementById('prenom').value.trim()), email:document.getElementById('email').value.trim().toLowerCase(), filiere_id:parseInt(document.getElementById('filiere_id').value), niveau:document.getElementById('niveau').value };
+            try{
+                if(editId){
+                    await fetch(`/api/etudiants/${editId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                    showToast('✏️ Étudiant modifié');
+                    editId=null;
+                    document.getElementById('formTitle').innerHTML='➕ Ajouter un étudiant';
+                }else{
+                    await fetch('/api/etudiants',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                }
+                document.getElementById('nom').value=''; document.getElementById('prenom').value=''; document.getElementById('email').value='';
+                loadStudents(); updateRequestCount();
+            }catch(e){ showToast('❌ Erreur',true); }
+        }
+        async function editStudent(id){ let res=await fetch('/api/etudiants'); let data=await res.json(); let s=data.etudiants.find(e=>e.id===id); if(s){ document.getElementById('nom').value=s.nom; document.getElementById('prenom').value=s.prenom; document.getElementById('email').value=s.email; document.getElementById('filiere_id').value=s.filiere_id; document.getElementById('niveau').value=s.niveau; editId=id; document.getElementById('formTitle').innerHTML='✏️ Modifier un étudiant'; } }
+        async function deleteStudent(id){ if(confirm('Supprimer ?')){ await fetch(`/api/etudiants/${id}`,{method:'DELETE'}); showToast('🗑️ Étudiant supprimé'); loadStudents(); updateRequestCount(); } }
+        async function updateRequestCount(){ let res=await fetch('/metrics'); let t=await res.text(); let m=t.match(/app_requests_total ([0-9.]+)/); if(m) document.getElementById('requestCount').innerText=Math.floor(parseFloat(m[1])); }
+        function escapeHtml(s){ return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+        loadStudents(); setInterval(updateRequestCount,2000); updateRequestCount();
+    </script>
+</body>
+</html>
